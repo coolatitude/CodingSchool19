@@ -1,1 +1,0 @@
-sudo adduser local user
