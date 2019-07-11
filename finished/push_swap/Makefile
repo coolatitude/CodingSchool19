@@ -6,7 +6,7 @@
 #    By: pvanderl <pvanderl@students.s19.be>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/04 20:03:57 by pvanderl          #+#    #+#              #
-#    Updated: 2019/06/17 14:14:41 by pvanderl         ###   ########.fr        #
+#    Updated: 2019/07/02 09:29:48 by pvanderl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,9 +31,9 @@ SRCS1 = p_main
 
 SRCS2 = c_main
 
-CLIBFT = -I${LIBFT}/includes
+CLIBFT = -I./libft/includes
 
-COPT = -I$(INCLUDES) $(CLIBFT) -L${LIBFT} -l ft
+COPT = -I$(INCLUDES) $(CLIBFT) -L./libft/ -l ft
 
 OCOM = $(addprefix $(SRCSDIR), $(addsuffix .c, $(SRCSCOM)))
 
@@ -53,13 +53,18 @@ $(NAME2): libft
 	@$(CC) $(CFLAGS) $(OBJS2) $(OCOM) $(COPT) -o $(NAME2)
 
 libft: clear
-	@Make -C ${LIBFT}/
+	@Make -C ./libft/
 
 clear:
 	@clear
 
 clean:
-	@make -C ${LIBFT}/ fclean
+	@make -C ./libft/ fclean
+
+norm:
+	@norminette $(INCLUDES) ./libft/includes/*
+	@norminette ./libft/srcs/*
+	@norminette $(OCOM) $(OBJS1) $(OBJS2)
 
 fclean: clean
 	@rm $(NAME1) $(NAME2)

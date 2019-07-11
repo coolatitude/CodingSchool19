@@ -6,7 +6,7 @@
 /*   By: pvanderl <pvanderl@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 22:53:36 by pvanderl          #+#    #+#             */
-/*   Updated: 2019/06/12 23:22:29 by pvanderl         ###   ########.fr       */
+/*   Updated: 2019/07/11 14:24:15 by pvanderl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,8 @@ void	move_b(t_stack *s)
 void	sort(t_stack *s)
 {
 	s->sa = s->size_a;
+	if (s->sa <= 3)
+		return (less_than_three(s));
 	move_a(s);
 	while (s->size_sb > 0)
 	{

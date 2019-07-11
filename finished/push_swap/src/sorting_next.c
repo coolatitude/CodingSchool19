@@ -6,7 +6,7 @@
 /*   By: pvanderl <pvanderl@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/28 14:37:16 by pvanderl          #+#    #+#             */
-/*   Updated: 2019/06/12 23:27:09 by pvanderl         ###   ########.fr       */
+/*   Updated: 2019/07/11 15:22:51 by pvanderl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,4 +90,37 @@ void	pop(t_stack *s)
 		i++;
 	}
 	(s->size_sb)--;
+}
+
+/*
+**	function less_than_three
+**
+**	deal with a stack with less than 4 elements
+**
+**	@param:	a pointer on the t_stack structure
+**
+**	@out:	/
+*/
+
+void	less_than_three(t_stack *s)
+{
+	if (s->sa == 2)
+		sa(s);
+	else
+	{
+		if (s->a[2] > s->a[1] && s->a[2] > s->a[0])
+			sa(s);
+		else if (s->a[1] > s->a[0] && s->a[1] > s->a[2])
+		{
+			rra(s);
+			if (s->a[0] > s->a[1])
+				sa(s);
+		}
+		else if (s->a[0] > s->a[1] && s->a[0] > s->a[2])
+		{
+			ra(s);
+			if (s->a[0] > s->a[1])
+				sa(s);
+		}
+	}
 }

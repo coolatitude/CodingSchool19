@@ -6,7 +6,7 @@
 /*   By: pvanderl <pvanderl@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/28 15:05:13 by pvanderl          #+#    #+#             */
-/*   Updated: 2019/06/17 17:08:45 by pvanderl         ###   ########.fr       */
+/*   Updated: 2019/07/11 14:24:45 by pvanderl         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ int		start(int ac, char **av, int checker);
 int		delta(int *stack, int nb, int n);
 void	push(t_stack *s, int n);
 void	pop(t_stack *s);
+void	less_than_three(t_stack *s);
 
 /*
 **	check_actions
