@@ -1,8 +1,11 @@
+#include "ft_ls.h"
+
 int		main(int ac, char **av)
 {
 	if (ac > 1)
 	{
 		av++;
-		while ()
+		while (0)
+			;
 	}
 }

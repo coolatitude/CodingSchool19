@@ -20,7 +20,7 @@ SRCSDIR = ./srcs/
 
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = main options
+SRCS = main options struct_actions print
 
 CLIBFT = -I${LIBFT}/includes
 
@@ -31,7 +31,7 @@ OBJS = $(addprefix $(SRCSDIR), $(addsuffix .c, $(SRCS)))
 all: $(NAME)
 
 $(NAME): libft
-	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(COPT) -o $(NAME)
 
 libft: clear
 	@Make -C ${LIBFT}/
