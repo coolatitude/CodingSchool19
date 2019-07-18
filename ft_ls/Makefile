@@ -20,34 +20,33 @@ SRCSDIR = ./srcs/
 
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = main options struct_actions print
+SRCS = main options struct_actions print dirs
 
-CLIBFT = -I${LIBFT}/includes
+CLIBFT = -I${FTPRINTF}/includes -I${LIBFT}/includes
 
-COPT = -I$(INCLUDES) $(CLIBFT) -L${LIBFT}/ -l ft
+COPT = -I$(INCLUDES) $(CLIBFT) -L${FTPRINTF}/ -l ftprintf -L${LIBFT}/ -l ft
 
 OBJS = $(addprefix $(SRCSDIR), $(addsuffix .c, $(SRCS)))
 
 all: $(NAME)
 
-$(NAME): libft
+$(NAME): #libs
 	@$(CC) $(CFLAGS) $(OBJS) $(COPT) -o $(NAME)
 
-libft: clear
-	@Make -C ${LIBFT}/
+libs: clear
+	@Make -C ${FTPRINTF}/
 
 clear:
 	@clear
 
 clean:
-	@make -C ${LIBFT}/ fclean
+	@make -C ${FTPRINTF}/ fclean
 
 norm:
-	@norminette $(INCLUDES) ${LIBFT}/includes/*
-	@norminette ${LIBFT}/srcs/*
+	@norminette $(INCLUDES)
 	@norminette $(OBJS)
 
-fclean: clean
+fclean: #clean
 	@rm $(NAME)
 
 re: fclean all
