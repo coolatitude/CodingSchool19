@@ -6,7 +6,7 @@
 #    By: pvanderl <pvanderl@students.s19.be>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/10/04 20:03:57 by pvanderl          #+#    #+#              #
-#    Updated: 2019/07/11 15:30:55 by pvanderl         ###   ########.fr        #
+#    Updated: 2020/09/12 00:37:36 by pvanderl         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,8 @@ INCLUDES = ./inc/
 SRCSDIR = ./src/
 
 CFLAGS = -Wall -Wextra -Werror
+
+CLIBFT = -I${LIBFT}/includes
 
 SRCSCOM = input_tools print_r print_rr print_sp se_tools sorting sorting_next\
 		struct_actions optimisation check_actions start 
