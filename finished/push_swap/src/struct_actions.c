@@ -62,7 +62,7 @@ t_stack		*destroy(t_stack *s)
 **	generate the t_stack elem
 **
 **	@param:	the number of arguments. aka the max size of a stack
-**	@param:	1 if it's the checker program | 0 if it's the push_swap program
+**	@param:	1 if it's the checker program | 0 if it's the push_swap program
 **
 **	@out:	a pointer on the new t_stack element
 */
