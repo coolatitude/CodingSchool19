@@ -4,6 +4,8 @@ from moves import F, R, U, B, L, D, Right, Down, DownSide
 
 from colorama import Back
 
+import config
+
 
 class Moves:
     F2 = 'F2'
@@ -26,7 +28,7 @@ class Moves:
     BD = 'D\''
 
 
-class Faces(Enum):
+class Faces:
     L = 2
     U = 4
     F = 8
@@ -59,12 +61,12 @@ class Cube:
         Moves.B: lambda grid: np.dot(grid, B),
         Moves.L: lambda grid: np.dot(grid, L),
         Moves.D: lambda grid: np.dot(grid, D),
-        Moves.F2: lambda grid: np.dot(np.dot(grid, F), DownSide),
-        Moves.R2: lambda grid: np.dot(np.dot(grid, R), np.linalg.inv(Down)),
-        Moves.U2: lambda grid: np.dot(np.dot(grid, U), np.linalg.inv(Right)),
-        Moves.B2: lambda grid: np.dot(np.dot(grid, B), np.linalg.inv(DownSide)),
-        Moves.L2: lambda grid: np.dot(np.dot(grid, L), Down),
-        Moves.D2: lambda grid: np.dot(np.dot(grid, D), Right),
+        Moves.F2: lambda grid: np.dot(np.dot(grid, F), F),
+        Moves.R2: lambda grid: np.dot(np.dot(grid, R), R),
+        Moves.U2: lambda grid: np.dot(np.dot(grid, U), U),
+        Moves.B2: lambda grid: np.dot(np.dot(grid, B), B),
+        Moves.L2: lambda grid: np.dot(np.dot(grid, L), L),
+        Moves.D2: lambda grid: np.dot(np.dot(grid, D), R),
         Moves.BF: lambda grid: np.dot(grid, np.linalg.inv(F)),
         Moves.BR: lambda grid: np.dot(grid, np.linalg.inv(R)),
         Moves.BU: lambda grid: np.dot(grid, np.linalg.inv(U)),
@@ -104,6 +106,33 @@ class Cube:
         [None, None, None, 32, 31, 30],
         [None, None, None, 33, 34, 35]
     ]
+
+    corners_expanded = {
+        18: (2,  15),
+        2:  (15, 18),
+        15: (18, 2),
+        20: (17, 36),
+        17: (36, 20),
+        36: (20, 17),
+        26: (42, 29),
+        42: (29, 26),
+        29: (26, 42),
+        24: (27, 8),
+        27: (8,  24),
+        8:  (24, 27),
+        45: (38, 11),
+        38: (11, 45),
+        11: (45, 38),
+        47: (9,  0),
+        9:  (0,  47),
+        0:  (47, 9),
+        53: (6,  33),
+        6:  (33, 53),
+        33: (53, 6),
+        51: (35, 44),
+        35: (44, 51),
+        44: (51, 35)
+    }
 
     corners = [
         (18, 2, 15),
@@ -155,16 +184,20 @@ class Cube:
             print(line)
         print()
 
+    def print_moves(self):
+        print(*self.moves_to_print, sep=' ')
+
+
     def do_move(self, move):
         self.move = move
-        print(move)
         action = self.moves.get(move, self.invalid_move)
         self.grid = action(self.grid)
-        self.print()
+        if config.verbose:
+            self.print()
 
     def add_move(self, move):
         self.moves_to_print.append(move)
-        self.movelist.append(move)
+        self.do_move(move)
 
     def add_moves(self, moves):
         for move in moves:
@@ -175,3 +208,62 @@ class Cube:
             self.do_move(move)
             self.print()
         self.movelist = []
+
+    def clean_moves(self):
+        changes = 1
+
+        combinations = {
+            Moves.F: Moves.BF,
+            Moves.R: Moves.BR,
+            Moves.U: Moves.BU,
+            Moves.B: Moves.BB,
+            Moves.L: Moves.BL,
+            Moves.D: Moves.BD,
+            Moves.BF: Moves.B,
+            Moves.BR: Moves.B,
+            Moves.BU: Moves.B,
+            Moves.BB: Moves.B,
+            Moves.BL: Moves.B,
+            Moves.BD: Moves.B,
+        }
+
+        replacements = {
+            Moves.F2: Moves.F,
+            Moves.R2: Moves.R,
+            Moves.U2: Moves.U,
+            Moves.B2: Moves.B,
+            Moves.L2: Moves.L,
+            Moves.D2: Moves.D,
+        }
+
+        for move in [Moves.F2, Moves.R2, Moves.U2, Moves.B2, Moves.L2, Moves.D2]:
+            while move in self.moves_to_print:
+                ind = self.moves_to_print.index(move)
+                self.moves_to_print.remove(move)
+                self.moves_to_print.insert(ind, replacements[move])
+                self.moves_to_print.insert(ind, replacements[move])
+
+        changes = 1
+        while changes > 0:
+            i = 0
+            changes = 0
+            while i < len(self.moves_to_print) - 1:
+                if self.moves_to_print[i + 1] == combinations[self.moves_to_print[i]]:
+                    self.moves_to_print.pop(i)
+                    self.moves_to_print.pop(i)
+                    changes += 1
+                else:
+                    i += 1
+        changes = 1
+        while changes > 0:
+            i = 0
+            changes = 0
+            while i < len(self.moves_to_print) - 2:
+                if self.moves_to_print[i] == self.moves_to_print[i + 1] and self.moves_to_print[i] == self.moves_to_print[i + 2]:
+                    self.moves_to_print.insert(i, combinations[self.moves_to_print[i]])
+                    self.moves_to_print.pop(i + 1)
+                    self.moves_to_print.pop(i + 1)
+                    self.moves_to_print.pop(i + 1)
+                    changes += 1
+                else:
+                    i += 1
