@@ -66,7 +66,7 @@ class Cube:
         Moves.U2: lambda grid: np.dot(np.dot(grid, U), U),
         Moves.B2: lambda grid: np.dot(np.dot(grid, B), B),
         Moves.L2: lambda grid: np.dot(np.dot(grid, L), L),
-        Moves.D2: lambda grid: np.dot(np.dot(grid, D), R),
+        Moves.D2: lambda grid: np.dot(np.dot(grid, D), D),
         Moves.BF: lambda grid: np.dot(grid, np.linalg.inv(F)),
         Moves.BR: lambda grid: np.dot(grid, np.linalg.inv(R)),
         Moves.BU: lambda grid: np.dot(grid, np.linalg.inv(U)),
@@ -187,7 +187,6 @@ class Cube:
     def print_moves(self):
         print(*self.moves_to_print, sep=' ')
 
-
     def do_move(self, move):
         self.move = move
         action = self.moves.get(move, self.invalid_move)
@@ -202,12 +201,6 @@ class Cube:
     def add_moves(self, moves):
         for move in moves:
             self.add_move(move)
-
-    def do_moves(self):
-        for move in self.movelist:
-            self.do_move(move)
-            self.print()
-        self.movelist = []
 
     def clean_moves(self):
         changes = 1
