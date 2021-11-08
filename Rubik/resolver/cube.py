@@ -51,12 +51,6 @@ colors = [
     2, 4, 8, 16, 32, 64
 ]
 
-# A D C B
-# - D -
-# C A D B
-# - C -
-# B C D A
-
 
 class Cube:
 

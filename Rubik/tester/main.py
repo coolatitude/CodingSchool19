@@ -58,5 +58,6 @@ if __name__ == '__main__':
         result_list = results.get()
         print(results.get())
         print('failed: ' + str(result_list.count(None)))
-        filtered_results = filter(lambda x: x != None, result_list)
-        print('mean: ' + str(statistics.geometric_mean(filtered_results)))
+        print('suceeded: ' + str(len(result_list) - result_list.count(None)))
+        filtered_results = filter(lambda x: x is not None, result_list)
+        print('mean: ' + str(round(statistics.geometric_mean(filtered_results))))
