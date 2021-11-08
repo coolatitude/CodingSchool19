@@ -2,7 +2,7 @@ from multiprocessing import Pool
 import random
 import os
 
-iterations = 20
+iterations = 2
 min_actions = 5
 max_actions = 20
 
@@ -39,7 +39,7 @@ def single_test():
         return None
     number_moves = len(lines.pop(0).split(' '))
     if lines != ['      \x1b[103m  \x1b[103m  \x1b[103m  \x1b[49m', '      \x1b[103m  \x1b[103m  \x1b[103m  \x1b[49m', '      \x1b[103m  \x1b[103m  \x1b[103m  \x1b[49m', '\x1b[41m  \x1b[41m  \x1b[41m  \x1b[102m  \x1b[102m  \x1b[102m  \x1b[106m  \x1b[106m  \x1b[106m  \x1b[44m  \x1b[44m  \x1b[44m  \x1b[49m', '\x1b[41m  \x1b[41m  \x1b[41m  \x1b[102m  \x1b[102m  \x1b[102m  \x1b[106m  \x1b[106m  \x1b[106m  \x1b[44m  \x1b[44m  \x1b[44m  \x1b[49m', '\x1b[41m  \x1b[41m  \x1b[41m  \x1b[102m  \x1b[102m  \x1b[102m  \x1b[106m  \x1b[106m  \x1b[106m  \x1b[44m  \x1b[44m  \x1b[44m  \x1b[49m', '      \x1b[107m  \x1b[107m  \x1b[107m  \x1b[49m', '      \x1b[107m  \x1b[107m  \x1b[107m  \x1b[49m', '      \x1b[107m  \x1b[107m  \x1b[107m  \x1b[49m', '']:
-        print(lines, sep='\n')
+        print(lines)
         print('error with sequence: "' + ' '.join(input_actions) + '"')
         return None
     return number_moves

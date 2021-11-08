@@ -373,8 +373,7 @@ def do_top_cross(cube: Cube):
                         print('HEY')
                 elif actual_order[color_pos + 3] == expected_order[index + 2]:
                     # arrange from color pos + 3 perspective
-                    cube.add_moves(moves[expected_order[index + 3]])
-                    cube.print()
+                    cube.add_moves(moves[expected_order[index]])
                 cube.add_moves([Moves.BB] * (1 + index))
                 break
             elif actual_order[color_pos + 2] == expected_order[index + 2]:
@@ -386,7 +385,6 @@ def do_top_cross(cube: Cube):
 
     orient_cross()
     order_cubies()
-
 
 def do_top_corners(cube: Cube):
 
