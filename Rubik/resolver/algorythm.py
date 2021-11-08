@@ -322,13 +322,25 @@ def do_top_cross(cube: Cube):
         order = [50, 52, 48, 46, 50, 52, 48, 46]
         actual_order = list(map(lambda x: cube.grid[x], order))
         first_back = actual_order.index(Faces.B)
-        if actual_order[first_back] == actual_order[first_back + 1]:
+        if actual_order[first_back] == actual_order[first_back + 1] or (actual_order[first_back] == actual_order[first_back + 3] and first_back == 0):
             moves = {
                48: [Moves.L, Moves.B, Moves.U, Moves.BB, Moves.BU, Moves.BL],
                52: [Moves.D, Moves.B, Moves.L, Moves.BB, Moves.BL, Moves.BD],
                50: [Moves.R, Moves.B, Moves.D, Moves.BB, Moves.BD, Moves.BR],
                46: [Moves.U, Moves.B, Moves.R, Moves.BB, Moves.BR, Moves.BU],
             }
+            if actual_order[first_back] == actual_order[first_back + 3]:
+                cube.add_moves(moves[order[1]])
+            else:
+                cube.add_moves(moves[order[first_back + 2]])
+        elif actual_order[first_back] == actual_order[first_back + 1]:
+            moves = {
+               48: [Moves.L, Moves.B, Moves.U, Moves.BB, Moves.BU, Moves.BL],
+               52: [Moves.D, Moves.B, Moves.L, Moves.BB, Moves.BL, Moves.BD],
+               50: [Moves.R, Moves.B, Moves.D, Moves.BB, Moves.BD, Moves.BR],
+               46: [Moves.U, Moves.B, Moves.R, Moves.BB, Moves.BR, Moves.BU],
+            }
+            print('HEY')
             cube.add_moves(moves[order[first_back + 2]])
         elif actual_order[first_back] == actual_order[first_back + 2]:
             moves = {
@@ -355,9 +367,7 @@ def do_top_cross(cube: Cube):
             Faces.D: [Moves.BR, Moves.BB, Moves.BB, Moves.R, Moves.B, Moves.BR, Moves.B, Moves.R]
         }
         for index in range(0, 4):
-            color_pos = 0
-            while actual_order[color_pos] != expected_order[index]:
-                color_pos += 1
+            color_pos = actual_order.index(expected_order[index])
             if actual_order[color_pos + 1] == expected_order[index + 1]:
                 if actual_order[color_pos + 2] == expected_order[index + 2]:
                     if actual_order[color_pos + 3] == expected_order[index + 3]:
@@ -373,14 +383,14 @@ def do_top_cross(cube: Cube):
                 cube.add_moves([Moves.BB] * (1 + index))
                 break
             elif actual_order[color_pos + 2] == expected_order[index + 2]:
-                cube.add_moves(moves[expected_order[index + 3]])
-                cube.add_moves(moves[expected_order[index + 2]])
-                cube.add_move(Moves.BB)
+                cube.add_moves(moves[actual_order[index + 3]])
+                cube.add_moves(moves[actual_order[index + 2]])
                 break
         cube.add_moves([Moves.BB] * [Faces.R, Faces.D, Faces.L, Faces.U].index(cube.grid[39]))
 
     orient_cross()
     order_cubies()
+
 
 def do_top_corners(cube: Cube):
 
