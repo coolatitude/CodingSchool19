@@ -138,7 +138,8 @@ def do_bottom_corners(cube: Cube):
                 found_place = corner[2]
                 break
         if found_place == -1:
-            return
+            print('Error finding place found for colors ' + match_color1 + ' and ' + match_color2)
+            exit()
         a = [45, 47, 53, 51]
         b = [38, 35, 6, 9]
         c = [44, 33, 0, 11]
@@ -154,10 +155,10 @@ def do_bottom_corners(cube: Cube):
             while cube.grid[m] != Faces.F or cube.grid[cube.corners_expanded[m][0]] != match_color1:
                 cube.add_move(Moves.B)
             cube.add_moves({
-                18: [],
-                20: [],
-                26: [],
-                24: []
+                18: [Moves.U2, Moves.L, Moves.U2, Moves.BL],
+                20: [Moves.R2, Moves.U, Moves.R2, Moves.BU],
+                26: [Moves.D2, Moves.R, Moves.D2, Moves.BR],
+                24: [Moves.L2, Moves.D, Moves.L2, Moves.BD],
             }[place])
         elif found_place in b:
             matching_place = {
@@ -347,13 +348,16 @@ def do_top_cross(cube: Cube):
         expected_order = [Faces.R, Faces.U, Faces.L, Faces.D, Faces.R, Faces.U, Faces.L, Faces.D]
         actual_order = list(map(lambda x: cube.grid[x], [39, 10, 5, 34, 39, 10, 5, 34]))
 
-        moves = [
-            [Moves.D, Moves.B2, Moves.BD, Moves.BB, Moves.D, Moves.BB, Moves.BD],
-            [Moves.R, Moves.B2, Moves.BR, Moves.BB, Moves.R, Moves.BB, Moves.BR],
-            [Moves.U, Moves.B2, Moves.BU, Moves.BB, Moves.U, Moves.BB, Moves.BU],
-            [Moves.L, Moves.B2, Moves.BL, Moves.BB, Moves.L, Moves.BB, Moves.BL]
-        ]
-
+        moves = {
+            -Faces.R: [Moves.D, Moves.B2, Moves.BD, Moves.BB, Moves.D, Moves.BB, Moves.BD],
+            -Faces.U: [Moves.R, Moves.B2, Moves.BR, Moves.BB, Moves.R, Moves.BB, Moves.BR],
+            -Faces.L: [Moves.U, Moves.B2, Moves.BU, Moves.BB, Moves.U, Moves.BB, Moves.BU],
+            -Faces.D: [Moves.L, Moves.B2, Moves.BL, Moves.BB, Moves.L, Moves.BB, Moves.BL],
+            Faces.R: [Moves.BU, Moves.BB, Moves.BB, Moves.U, Moves.B, Moves.BU, Moves.B, Moves.U],
+            Faces.U: [Moves.BL, Moves.BB, Moves.BB, Moves.L, Moves.B, Moves.BL, Moves.B, Moves.L],
+            Faces.L: [Moves.BD, Moves.BB, Moves.BB, Moves.D, Moves.B, Moves.BD, Moves.B, Moves.D],
+            Faces.D: [Moves.BR, Moves.BB, Moves.BB, Moves.R, Moves.B, Moves.BR, Moves.B, Moves.R]
+        }
         for index in range(0, 4):
             color_pos = 0
             while actual_order[color_pos] != expected_order[index]:
@@ -369,16 +373,21 @@ def do_top_cross(cube: Cube):
                         print('HEY')
                 elif actual_order[color_pos + 3] == expected_order[index + 2]:
                     # arrange from color pos + 3 perspective
-                    cube.add_moves(moves[(color_pos + 3) % 4])
+                    cube.add_moves(moves[expected_order[index + 3]])
+                    cube.print()
                 cube.add_moves([Moves.BB] * (1 + index))
                 break
             elif actual_order[color_pos + 2] == expected_order[index + 2]:
-                print('HEYHEYHEY')
+                cube.add_moves(moves[expected_order[index + 3]])
+                cube.add_moves(moves[expected_order[index + 2]])
+                cube.add_move(Moves.BB)
                 break
         cube.add_moves([Moves.BB] * [Faces.R, Faces.D, Faces.L, Faces.U].index(cube.grid[39]))
 
     orient_cross()
+    cube.print()
     order_cubies()
+    exit()
 
 
 def do_top_corners(cube: Cube):
@@ -434,6 +443,17 @@ def do_top_corners(cube: Cube):
         expected_order = corners * 2
         actual_order = [get_cube_number(corner) for corner in corners]
         double_actual_order = actual_order * 2
+
+        corner_rotations = {
+            -45: [Moves.B, Moves.R, Moves.BB, Moves.BL, Moves.B, Moves.BR, Moves.BB, Moves.L],
+            -47: [Moves.B, Moves.U, Moves.BB, Moves.BD, Moves.B, Moves.BU, Moves.BB, Moves.D],
+            -53: [Moves.B, Moves.L, Moves.BB, Moves.BR, Moves.B, Moves.BL, Moves.BB, Moves.R],
+            -51: [Moves.B, Moves.D, Moves.BB, Moves.BU, Moves.B, Moves.BD, Moves.BB, Moves.U],
+            45: [Moves.BL, Moves.B, Moves.R, Moves.BB, Moves.L, Moves.B, Moves.BR, Moves.BB],
+            47: [Moves.BD, Moves.B, Moves.U, Moves.BB, Moves.D, Moves.B, Moves.BU, Moves.BB],
+            53: [Moves.BR, Moves.B, Moves.L, Moves.BB, Moves.R, Moves.B, Moves.BL, Moves.BB],
+            51: [Moves.BU, Moves.B, Moves.D, Moves.BB, Moves.U, Moves.B, Moves.BD, Moves.BB]
+        }
         for index in range(0, 4):
             if double_actual_order[index] != expected_order[index]:
                 continue
@@ -442,31 +462,18 @@ def do_top_corners(cube: Cube):
                 if double_actual_order[index + 2] == expected_order[index + 2]:
                     return
                 else:
-                    print('simple swap')
-                    print(expected_order[index])
-                    cube.print()
-                    exit()
+                    # simple swap ( A B D C )
+                    cube.add_moves(corner_rotations[expected_order[index + 3]])
             # if the rest is ordered
             elif angles_are_ordered(actual_order, double_actual_order[index]):
-                if double_actual_order[index + 2] == expected_order[index + 1]:
-                    # rotation conter clockwise
-                    # L U' R' U L' U' R U2
-                    corner_rotations = {
-                        45: [Moves.B, Moves.R, Moves.BB, Moves.BL, Moves.B, Moves.BR, Moves.BB, Moves.L],
-                        47: [Moves.B, Moves.U, Moves.BB, Moves.BD, Moves.B, Moves.BU, Moves.BB, Moves.D],
-                        53: [Moves.B, Moves.L, Moves.BB, Moves.BR, Moves.B, Moves.BL, Moves.BB, Moves.R],
-                        51: [Moves.B, Moves.D, Moves.BB, Moves.BU, Moves.B, Moves.BD, Moves.BB, Moves.U]
-                    }
-                    cube.add_moves(corner_rotations[expected_order[index]])
-                else:
-                    # rotation clockwise
-                    corner_rotations = {
-                        45: [Moves.BL, Moves.B, Moves.R, Moves.BB, Moves.L, Moves.B, Moves.BR, Moves.BB],
-                        47: [Moves.BD, Moves.B, Moves.U, Moves.BB, Moves.D, Moves.B, Moves.BU, Moves.BB],
-                        53: [Moves.BR, Moves.B, Moves.L, Moves.BB, Moves.R, Moves.B, Moves.BL, Moves.BB],
-                        51: [Moves.BU, Moves.B, Moves.D, Moves.BB, Moves.U, Moves.B, Moves.BD, Moves.BB]
-                    }
-                    cube.add_moves(corner_rotations[expected_order[index]])
+                clockwise = -1 if double_actual_order[index + 2] == expected_order[index + 1] else 1
+                cube.add_moves(
+                    corner_rotations[
+                        clockwise * expected_order[
+                            index
+                        ]
+                    ]
+                )
             # if the opposite cuby is at the correct place
             elif double_actual_order[index + 2] == expected_order[index + 2]:
                 print('opposite swap')
@@ -531,10 +538,10 @@ def do_top_corners(cube: Cube):
             Check([11, 44, 33], [*moves[Faces.B][Faces.R], *moves[Faces.B][Faces.D]], Faces.B),
             Check([44, 33, 0], [*moves[Faces.B][Faces.D], *moves[Faces.B][Faces.L]], Faces.B),
             # all corner are blue counter-clockwise oriented
-            Check([11, 0, 33], [*moves[Faces.B][Faces.U], *moves[Faces.B][Faces.L]], Faces.B),
-            Check([44, 11, 0], [*moves[Faces.B][Faces.R], *moves[Faces.B][Faces.U]], Faces.B),
-            Check([33, 44, 11], [*moves[Faces.B][Faces.D], *moves[Faces.B][Faces.R]], Faces.B),
-            Check([0, 33, 44], [*moves[Faces.B][Faces.L], *moves[Faces.B][Faces.D]], Faces.B),
+            Check([38, 9, 6], [*moves[Faces.B][Faces.U], *moves[Faces.B][Faces.L]], Faces.B),
+            Check([35, 38, 9], [*moves[Faces.B][Faces.R], *moves[Faces.B][Faces.U]], Faces.B),
+            Check([6, 35, 38], [*moves[Faces.B][Faces.D], *moves[Faces.B][Faces.R]], Faces.B),
+            Check([9, 6, 35], [*moves[Faces.B][Faces.L], *moves[Faces.B][Faces.D]], Faces.B),
         ]
         while not all([cube.grid[corner] == Faces.B for corner in corners]):
             for check in checks:
@@ -568,5 +575,3 @@ def solve(cube: Cube):
     cube.clean_moves()
     if config.verbose:
         print(len(cube.moves_to_print))
-    cube.print_moves()
-    cube.print()

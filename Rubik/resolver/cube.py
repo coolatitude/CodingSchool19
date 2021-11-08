@@ -95,6 +95,17 @@ class Cube:
     # L F R B
     #   D
 
+    # A D C B
+    # - D' -
+    # D C A B
+    # - A' -
+    # D A B C
+
+
+    # A B D C
+    # - D -
+    # D A B C
+
     visual = [
         [None, None, None,  9, 10, 11],
         [None, None, None, 14, 13, 12],
@@ -255,6 +266,35 @@ class Cube:
                 if self.moves_to_print[i] == self.moves_to_print[i + 1] and self.moves_to_print[i] == self.moves_to_print[i + 2]:
                     self.moves_to_print.insert(i, combinations[self.moves_to_print[i]])
                     self.moves_to_print.pop(i + 1)
+                    self.moves_to_print.pop(i + 1)
+                    self.moves_to_print.pop(i + 1)
+                    changes += 1
+                else:
+                    i += 1
+
+        regroupment = {
+            Moves.F: Moves.F2,
+            Moves.R: Moves.R2,
+            Moves.U: Moves.U2,
+            Moves.B: Moves.B2,
+            Moves.L: Moves.L2,
+            Moves.D: Moves.D2,
+        }
+        moves = [
+            Moves.F,
+            Moves.R,
+            Moves.U,
+            Moves.B,
+            Moves.L,
+            Moves.D,
+        ]
+        changes = 1
+        while changes > 0:
+            i = 0
+            changes = 0
+            while i < len(self.moves_to_print) - 1:
+                if self.moves_to_print[i] in moves and self.moves_to_print[i] == self.moves_to_print[i + 1]:
+                    self.moves_to_print.insert(i, regroupment[self.moves_to_print[i]])
                     self.moves_to_print.pop(i + 1)
                     self.moves_to_print.pop(i + 1)
                     changes += 1
