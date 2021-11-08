@@ -385,9 +385,7 @@ def do_top_cross(cube: Cube):
         cube.add_moves([Moves.BB] * [Faces.R, Faces.D, Faces.L, Faces.U].index(cube.grid[39]))
 
     orient_cross()
-    cube.print()
     order_cubies()
-    exit()
 
 
 def do_top_corners(cube: Cube):
