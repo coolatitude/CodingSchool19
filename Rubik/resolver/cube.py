@@ -95,16 +95,6 @@ class Cube:
     # L F R B
     #   D
 
-    # A D C B
-    # - D' -
-    # D C A B
-    # - A' -
-    # D A B C
-
-
-    # A B D C
-    # - D -
-    # D A B C
 
     visual = [
         [None, None, None,  9, 10, 11],
