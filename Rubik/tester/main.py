@@ -3,7 +3,7 @@ import random
 import os
 import statistics
 
-iterations = 20
+iterations = 200
 min_actions = 5
 max_actions = 20
 
@@ -51,7 +51,7 @@ def throw_away_function(_):
 
 if __name__ == '__main__':
     print('Start of the programs')
-    with Pool(10) as p:
+    with Pool(25) as p:
         results = p.map_async(throw_away_function, range(iterations))
         p.close()
         p.join()
