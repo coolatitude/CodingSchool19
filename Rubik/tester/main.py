@@ -29,7 +29,7 @@ actions = [
 ]
 
 
-def single_test():
+def single_test(_):
     number_actions = random.randint(min_actions, max_actions)
     input_actions = [random.choice(actions) for x in range(number_actions)]
     run = os.popen('timeout 30 python3 resolver/main.py --tester "' + ' '.join(input_actions) + '"')
@@ -45,14 +45,10 @@ def single_test():
     return number_moves
 
 
-def throw_away_function(_):
-    return single_test()
-
-
 if __name__ == '__main__':
     print('Start of the programs')
     with Pool(25) as p:
-        results = p.map_async(throw_away_function, range(iterations))
+        results = p.map_async(single_test, range(iterations))
         p.close()
         p.join()
         result_list = results.get()
