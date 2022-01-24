@@ -573,7 +573,6 @@ def solve(cube: Cube):
     do_top_corners(cube)
     if config.verbose:
         print('Solving done..................................................................')
-        print(len(cube.moves_to_print))
-    cube.clean_moves()
-    if config.verbose:
-        print(len(cube.moves_to_print))
+        cube.print()
+    if config.cleaning_level > 0:
+        cube.clean_moves()

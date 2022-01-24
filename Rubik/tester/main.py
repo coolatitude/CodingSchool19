@@ -3,7 +3,7 @@ import random
 import os
 import statistics
 
-iterations = 200
+iterations = 2000
 min_actions = 5
 max_actions = 20
 
@@ -47,7 +47,7 @@ def single_test(_):
 
 if __name__ == '__main__':
     print('Start of the programs')
-    with Pool(25) as p:
+    with Pool(15) as p:
         results = p.map_async(single_test, range(iterations))
         p.close()
         p.join()

@@ -76,8 +76,8 @@ class Cube:
     }
 
     @staticmethod
-    def invalid_move(self):
-        print('Unknown move: ' + self.move)
+    def invalid_move(move):
+        print('Unknown move: ' + move)
         exit(0)
 
     def __init__(self, size):
@@ -85,7 +85,6 @@ class Cube:
         self.movelist = []
         self.size = size
         self.grid = []
-        self.move = ''
         for c in colors:
             for x in range(size * size):
                 self.grid.append(c)
@@ -189,8 +188,9 @@ class Cube:
         print(*self.moves_to_print, sep=' ')
 
     def do_move(self, move):
-        self.move = move
-        action = self.moves.get(move, self.invalid_move)
+        action = self.moves.get(move)
+        if action is None:
+            self.invalid_move(move)
         self.grid = action(self.grid)
         if config.verbose:
             self.print()
@@ -204,7 +204,36 @@ class Cube:
             self.add_move(move)
 
     def clean_moves(self):
-        changes = 1
+
+        def inside_cleaning():
+            tot_changes = 0
+            changes = 1
+            while changes > 0:
+                i = 0
+                changes = 0
+                while i < len(self.moves_to_print) - 1:
+                    if self.moves_to_print[i + 1] == combinations[self.moves_to_print[i]]:
+                        self.moves_to_print.pop(i)
+                        self.moves_to_print.pop(i)
+                        changes += 1
+                        tot_changes += 1
+                    else:
+                        i += 1
+            changes = 1
+            while changes > 0:
+                i = 0
+                changes = 0
+                while i < len(self.moves_to_print) - 2:
+                    if self.moves_to_print[i] == self.moves_to_print[i + 1] and self.moves_to_print[i] == self.moves_to_print[i + 2]:
+                        self.moves_to_print.insert(i, combinations[self.moves_to_print[i]])
+                        self.moves_to_print.pop(i + 1)
+                        self.moves_to_print.pop(i + 1)
+                        self.moves_to_print.pop(i + 1)
+                        changes += 1
+                        tot_changes += 1
+                    else:
+                        i += 1
+            return tot_changes
 
         combinations = {
             Moves.F: Moves.BF,
@@ -237,30 +266,12 @@ class Cube:
                 self.moves_to_print.insert(ind, replacements[move])
                 self.moves_to_print.insert(ind, replacements[move])
 
-        changes = 1
-        while changes > 0:
-            i = 0
-            changes = 0
-            while i < len(self.moves_to_print) - 1:
-                if self.moves_to_print[i + 1] == combinations[self.moves_to_print[i]]:
-                    self.moves_to_print.pop(i)
-                    self.moves_to_print.pop(i)
-                    changes += 1
-                else:
-                    i += 1
-        changes = 1
-        while changes > 0:
-            i = 0
-            changes = 0
-            while i < len(self.moves_to_print) - 2:
-                if self.moves_to_print[i] == self.moves_to_print[i + 1] and self.moves_to_print[i] == self.moves_to_print[i + 2]:
-                    self.moves_to_print.insert(i, combinations[self.moves_to_print[i]])
-                    self.moves_to_print.pop(i + 1)
-                    self.moves_to_print.pop(i + 1)
-                    self.moves_to_print.pop(i + 1)
-                    changes += 1
-                else:
-                    i += 1
+        if config.cleaning_level > 1:
+            tot_changes = 1
+            while tot_changes > 0:
+                tot_changes = inside_cleaning()
+        else:
+            inside_cleaning()
 
         regroupment = {
             Moves.F: Moves.F2,
