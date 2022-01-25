@@ -1,4 +1,3 @@
-from enum import Enum
 import numpy as np
 from moves import F, R, U, B, L, D, Right, Down, DownSide
 

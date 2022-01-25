@@ -1,6 +1,6 @@
 import argparse
 
-from cube import Cube, Moves
+from cube import Cube
 from algorythm import solve
 import config
 
